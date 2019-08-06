@@ -166,7 +166,7 @@ fi
 
 # Consider $ sudo nvpmodel -m 2 or $ sudo nvpmodel -m 0
 NUM_CPU=$(nproc)
-time make -j$(($NUM_CPU - 1))
+time make -j$NUM_CPU
 if [ $? -eq 0 ] ; then
   echo "OpenCV make successful"
 else
