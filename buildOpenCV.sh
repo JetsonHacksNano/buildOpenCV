@@ -186,8 +186,6 @@ else
   fi
 fi
 
-exit 0
-
 echo "Installing ... "
 sudo make install
 if [ $? -eq 0 ] ; then
