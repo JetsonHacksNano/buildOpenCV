@@ -146,6 +146,7 @@ time cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D CUDA_FAST_MATH=ON \
       -D WITH_CUBLAS=ON \
       -D WITH_LIBV4L=ON \
+      -D WITH_V4L=ON \
       -D WITH_GSTREAMER=ON \
       -D WITH_GSTREAMER_0_10=OFF \
       -D WITH_QT=ON \
