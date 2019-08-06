@@ -75,9 +75,8 @@ sudo apt-get install -y \
     libglew-dev \
     libgtk2.0-dev \
     libgtk-3-dev \
-    libjasper-dev \
     libjpeg-dev \
-    libpng12-dev \
+    libpng-dev \
     libpostproc-dev \
     libswscale-dev \
     libtbb-dev \
