@@ -153,6 +153,7 @@ time cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D WITH_OPENGL=ON \
       -D BUILD_opencv_python2=ON \
       -D BUILD_opencv_python3=ON \
+      -D CPACK_BINARY_DEB=ON \
       ../
 
 if [ $? -eq 0 ] ; then
@@ -184,6 +185,15 @@ else
     echo "Please fix issues and retry build"
     exit 1
   fi
+fi
+
+echo "Creating Packages ... "
+make package
+if [ $? -eq 0 ] ; then
+   echo "OpenCV packages created in: $PWD"
+else
+   echo "There was an issue with packages creation"
+   exit 1
 fi
 
 echo "Installing ... "
