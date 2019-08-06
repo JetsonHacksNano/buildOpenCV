@@ -75,9 +75,8 @@ sudo apt-get install -y \
     libglew-dev \
     libgtk2.0-dev \
     libgtk-3-dev \
-    libjasper-dev \
     libjpeg-dev \
-    libpng12-dev \
+    libpng-dev \
     libpostproc-dev \
     libswscale-dev \
     libtbb-dev \
@@ -147,12 +146,14 @@ time cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D CUDA_FAST_MATH=ON \
       -D WITH_CUBLAS=ON \
       -D WITH_LIBV4L=ON \
+      -D WITH_V4L=ON \
       -D WITH_GSTREAMER=ON \
       -D WITH_GSTREAMER_0_10=OFF \
       -D WITH_QT=ON \
       -D WITH_OPENGL=ON \
       -D BUILD_opencv_python2=ON \
       -D BUILD_opencv_python3=ON \
+      -D CPACK_BINARY_DEB=ON \
       ../
 
 if [ $? -eq 0 ] ; then
@@ -166,7 +167,7 @@ fi
 
 # Consider $ sudo nvpmodel -m 2 or $ sudo nvpmodel -m 0
 NUM_CPU=$(nproc)
-time make -j$(($NUM_CPU - 1))
+time make -j$NUM_CPU
 if [ $? -eq 0 ] ; then
   echo "OpenCV make successful"
 else
@@ -186,7 +187,14 @@ else
   fi
 fi
 
-exit 0
+echo "Creating Packages ... "
+make package
+if [ $? -eq 0 ] ; then
+   echo "OpenCV packages created in: $PWD"
+else
+   echo "There was an issue with packages creation"
+   exit 1
+fi
 
 echo "Installing ... "
 sudo make install
