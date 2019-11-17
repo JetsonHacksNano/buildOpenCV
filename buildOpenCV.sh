@@ -2,7 +2,7 @@
 # License: MIT. See license file in root directory
 # Copyright(c) JetsonHacks (2017-2019)
 
-OPENCV_VERSION=3.4.1
+OPENCV_VERSION=4.1.1
 # Jetson Nano
 ARCH_BIN=5.3
 INSTALL_DIR=/usr/local
@@ -18,11 +18,14 @@ WHEREAMI=$PWD
 
 CLEANUP=true
 
+PACKAGE_OPENCV="-D CPACK_BINARY_DEB=ON"
+
 function usage
 {
-    echo "usage: ./buildOpenCVTX1.sh [[-s sourcedir ] | [-h]]"
+    echo "usage: ./buildOpenCV.sh [[-s sourcedir ] | [-h]]"
     echo "-s | --sourcedir   Directory in which to place the opencv sources (default $HOME)"
     echo "-i | --installdir  Directory in which to install opencv libraries (default /usr/local)"
+    echo "--no_package       Do not package OpenCV as .deb file (default is true)"
     echo "-h | --help  This message"
 }
 
@@ -35,6 +38,8 @@ while [ "$1" != "" ]; do
         -i | --installdir )     shift
                                 INSTALL_DIR=$1
                                 ;;
+        --no_package )          PACKAGE_OPENCV=""
+                                ;;
         -h | --help )           usage
                                 exit
                                 ;;
@@ -46,18 +51,19 @@ done
 
 CMAKE_INSTALL_PREFIX=$INSTALL_DIR
 
-source scripts/jetson_variables
-
 # Print out the current configuration
 echo "Build configuration: "
-echo " NVIDIA Jetson $JETSON_BOARD"
-echo " Operating System: $JETSON_L4T_STRING [Jetpack $JETSON_JETPACK]"
-echo " Current OpenCV Installation: $JETSON_OPENCV"
+echo " NVIDIA Jetson Nano"
 echo " OpenCV binaries will be installed in: $CMAKE_INSTALL_PREFIX"
 echo " OpenCV Source will be installed in: $OPENCV_SOURCE_DIR"
+if [ "$PACKAGE_OPENCV" = "" ] ; then
+   echo " NOT Packaging OpenCV"
+else
+   echo " Packaging OpenCV"
+fi
 
 if [ $DOWNLOAD_OPENCV_EXTRAS == "YES" ] ; then
- echo "Also installing opencv_extras"
+ echo "Also downloading opencv_extras"
 fi
 
 # Repository setup
@@ -67,6 +73,7 @@ sudo apt-get update
 # Download dependencies for the desired configuration
 cd $WHEREAMI
 sudo apt-get install -y \
+    build-essential \
     cmake \
     libavcodec-dev \
     libavformat-dev \
@@ -75,9 +82,8 @@ sudo apt-get install -y \
     libglew-dev \
     libgtk2.0-dev \
     libgtk-3-dev \
-    libjasper-dev \
     libjpeg-dev \
-    libpng12-dev \
+    libpng-dev \
     libpostproc-dev \
     libswscale-dev \
     libtbb-dev \
@@ -89,12 +95,8 @@ sudo apt-get install -y \
     zlib1g-dev \
     pkg-config
 
-# https://devtalk.nvidia.com/default/topic/1007290/jetson-tx2/building-opencv-with-opengl-support-/post/5141945/#5141945
-cd /usr/local/cuda/include
-sudo patch -N cuda_gl_interop.h $WHEREAMI'/patches/OpenGLHeader.patch' 
-
 # Python 2.7
-sudo apt-get install -y python-dev python-numpy python-py python-pytest
+sudo apt-get install -y python-dev  python-numpy  python-py  python-pytest
 # Python 3.6
 sudo apt-get install -y python3-dev python3-numpy python3-py python3-pytest
 
@@ -102,15 +104,8 @@ sudo apt-get install -y python3-dev python3-numpy python3-py python3-pytest
 sudo apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev 
 
 cd $OPENCV_SOURCE_DIR
-git clone https://github.com/opencv/opencv.git
-cd opencv
-git checkout -b v${OPENCV_VERSION} ${OPENCV_VERSION}
-if [ $OPENCV_VERSION = 3.4.1 ] ; then
-  # For 3.4.1, use this commit to fix samples/gpu/CMakeLists.txt
-  git merge ec0bb66
-  # For 3.4.1, use this to fix C compilation issues (like in YOLO)
-  git cherry-pick 549b5df
-fi
+git clone --branch "$OPENCV_VERSION" https://github.com/opencv/opencv.git
+git clone --branch "$OPENCV_VERSION" https://github.com/opencv/opencv_contrib.git
 
 if [ $DOWNLOAD_OPENCV_EXTRAS == "YES" ] ; then
  echo "Installing opencv_extras"
@@ -121,6 +116,11 @@ if [ $DOWNLOAD_OPENCV_EXTRAS == "YES" ] ; then
  git checkout -b v${OPENCV_VERSION} ${OPENCV_VERSION}
 fi
 
+# Patch the Eigen library issue ...
+cd $OPENCV_SOURCE_DIR/opencv
+# sed -i 's/include <Eigen\/Core>/include <eigen3\/Eigen\/Core>/g' modules/core/include/opencv2/core/private.hpp
+
+# Create the build directory and start cmake
 cd $OPENCV_SOURCE_DIR/opencv
 mkdir build
 cd build
@@ -130,14 +130,15 @@ cd build
 #     -D OPENCV_TEST_DATA_PATH=../opencv_extra/testdata \
 #     -D INSTALL_C_EXAMPLES=ON \
 #     -D INSTALL_PYTHON_EXAMPLES=ON \
-#     -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.0.0/modules \
 
 # If you are compiling the opencv_contrib modules:
 # curl -L https://github.com/opencv/opencv_contrib/archive/3.4.1.zip -o opencv_contrib-3.4.1.zip
 
 # There are also switches which tell CMAKE to build the samples and tests
 # Check OpenCV documentation for details
+#       -D WITH_QT=ON \
 
+echo $PWD
 time cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D CMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} \
       -D WITH_CUDA=ON \
@@ -147,13 +148,21 @@ time cmake -D CMAKE_BUILD_TYPE=RELEASE \
       -D CUDA_FAST_MATH=ON \
       -D WITH_CUBLAS=ON \
       -D WITH_LIBV4L=ON \
+      -D WITH_V4L=ON \
       -D WITH_GSTREAMER=ON \
       -D WITH_GSTREAMER_0_10=OFF \
-      -D WITH_QT=ON \
+       -D WITH_QT=ON \
       -D WITH_OPENGL=ON \
       -D BUILD_opencv_python2=ON \
       -D BUILD_opencv_python3=ON \
+      -D BUILD_TESTS=OFF \
+      -D BUILD_PERF_TESTS=OFF \
+      -D BUILD_EXAMPLES=ON \
+      -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
+      -D CMAKE_BUILD_TYPE=RELEASE \
+      $"PACKAGE_OPENCV" \
       ../
+
 
 if [ $? -eq 0 ] ; then
   echo "CMake configuration make successful"
@@ -164,7 +173,7 @@ else
   exit 1
 fi
 
-# Consider $ sudo nvpmodel -m 2 or $ sudo nvpmodel -m 0
+# Consider the MAXN performance mode if using a barrel jack on the Nano
 NUM_CPU=$(nproc)
 time make -j$(($NUM_CPU - 1))
 if [ $? -eq 0 ] ; then
@@ -186,16 +195,43 @@ else
   fi
 fi
 
-exit 0
-
 echo "Installing ... "
 sudo make install
+sudo ldconfig
 if [ $? -eq 0 ] ; then
    echo "OpenCV installed in: $CMAKE_INSTALL_PREFIX"
 else
    echo "There was an issue with the final installation"
    exit 1
 fi
+
+# If PACKAGE_OPENCV is on, pack 'er up and get ready to go!
+# We should still be in the build directory ...
+if [ "$PACKAGE_OPENCV" != "" ] ; then
+   echo "Starting Packaging"
+   sudo ldconfig  
+   NUM_CPU=$(nproc)
+   time sudo make package -j$NUM_CPU
+   if [ $? -eq 0 ] ; then
+     echo "OpenCV make package successful"
+   else
+     # Try to make again; Sometimes there are issues with the build
+     # because of lack of resources or concurrency issues
+     echo "Make package did not build " >&2
+     echo "Retrying ... "
+     # Single thread this time
+     sudo make package
+     if [ $? -eq 0 ] ; then
+       echo "OpenCV make package successful"
+     else
+       # Try to make again
+       echo "Make package did not successfully build" >&2
+       echo "Please fix issues and retry build"
+       exit 1
+     fi
+   fi
+fi
+
 
 # check installation
 IMPORT_CHECK="$(python -c "import cv2 ; print cv2.__version__")"
