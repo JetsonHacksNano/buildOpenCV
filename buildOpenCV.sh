@@ -118,7 +118,7 @@ fi
 
 # Patch the Eigen library issue ...
 cd $OPENCV_SOURCE_DIR/opencv
-# sed -i 's/include <Eigen\/Core>/include <eigen3\/Eigen\/Core>/g' modules/core/include/opencv2/core/private.hpp
+sed -i 's/include <Eigen\/Core>/include <eigen3\/Eigen\/Core>/g' modules/core/include/opencv2/core/private.hpp
 
 # Create the build directory and start cmake
 cd $OPENCV_SOURCE_DIR/opencv
