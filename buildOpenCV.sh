@@ -15,6 +15,11 @@ DOWNLOAD_OPENCV_EXTRAS=NO
 # Source code directory
 OPENCV_SOURCE_DIR=$HOME
 WHEREAMI=$PWD
+# NUM_JOBS is the number of jobs to run simultaneously when using make
+# This will default to the number of CPU cores (on the Nano, that's 4)
+# If you are using a SD card, you may want to change this
+# to 1. Also, you may want to increase the size of your swap file
+NUM_JOBS=$(nproc)
 
 CLEANUP=true
 
@@ -173,8 +178,7 @@ else
 fi
 
 # Consider the MAXN performance mode if using a barrel jack on the Nano
-NUM_CPU=$(nproc)
-time make -j$(($NUM_CPU - 1))
+time make -j$NUM_JOBS
 if [ $? -eq 0 ] ; then
   echo "OpenCV make successful"
 else
@@ -209,8 +213,7 @@ fi
 if [ "$PACKAGE_OPENCV" != "" ] ; then
    echo "Starting Packaging"
    sudo ldconfig  
-   NUM_CPU=$(nproc)
-   time sudo make package -j$NUM_CPU
+   time sudo make package -j$NUM_JOBS
    if [ $? -eq 0 ] ; then
      echo "OpenCV make package successful"
    else
