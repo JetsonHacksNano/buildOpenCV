@@ -10,17 +10,17 @@ Building for:
 <em><b>Note: </b>The script does not check to see which version of L4T is running before building, please understand that this has only been tested against the above stated versions.</em>
 
 ### Building
-This is a long build, it is recommended to write to a log file, for example:
+This is a long build, you may want to write to a log file, for example:
 
 <blockquote>$ ./buildOpenCV.sh |& tee openCV_build.log</blockquote>
 
-The log will be written to openCV_build.log for later review.
+While the build will still be written to the console, the build log will be written to openCV_build.log for later review.
 
-On the Jetson Nano, this is a challenging build. There is not enough memory on the Nano to build make with multiple jobs (i.e)
+On the Jetson Nano, this is a challenging build. There is not enough memory on the Nano to make with multiple jobs (i.e)
 
 <blockquote>$ make -j4</blockquote>
 
-without using a significant amount of swap file space. With L4T 32.2.1, there is a default swap space. However, if you are using a SD card, this can result in long compile times as both physcial memory and the swap file exhaust. If you use a SD card, consider setting the environment variable NUM_JOBS in the buildOpenCV.sh script to 1. The build time will be longer, but you will not have the same amount of memory/SD card thrashing. 
+without using a significant amount of swap file space. With L4T 32.2.1, there is a default swap space. However, if you are using a SD card, this can result in long compile times as both physcial memory and the swap file memory exhaust. Recommend using a USB drive for building. If you use a SD card, consider setting the environment variable NUM_JOBS in the buildOpenCV.sh script to 1. The build time may be longer, but you will not have the same amount of memory/SD card thrashing. 
 
 ### Usage
 
