@@ -7,7 +7,7 @@ Building for:
 * OpenCV 4.1.1
 * Packaging Option ( Builds package by default; --no_package does not build package)
 
-<em><b>Note: </b>The script does not check to see which version of L4T is running before building, please understand that this has only been tested against the above stated versions.</em>
+<em><b>Note: </b>The script does not check to see which version of L4T is running before building, understand the script may only work with the stated versions.</em>
 
 ### Building
 This is a long build, you may want to write to a log file, for example:
@@ -20,7 +20,7 @@ On the Jetson Nano, this is a challenging build. There is not enough memory on t
 
 <blockquote>$ make -j4</blockquote>
 
-without using a significant amount of swap file space. With L4T 32.2.1, there is a default swap space. However, if you are using a SD card, this can result in long compile times as both physcial memory and the swap file memory exhaust. Recommend using a USB drive for building. If you use a SD card, consider setting the environment variable NUM_JOBS in the buildOpenCV.sh script to 1. The build time may be longer, but you will not have the same amount of memory/SD card thrashing. 
+without using a significant amount of swap file space. With L4T 32.2.1, there is a default swap space. However, if you are using a SD card, this can result in long compile times as both physcial memory and the swap file memory exhaust. Recommend using a USB drive for building. If you use a SD card, consider setting the environment variable NUM_JOBS in the buildOpenCV.sh script to 1. The build time may be longer, but you will not have the same amount of memory/SD card thrashing. If you are using a USB drive, you may want to increase the size of your swap file from the default 2GB. 
 
 ### Usage
 
