@@ -31,7 +31,7 @@ without using a significant amount of swap file space. With L4T 32.2.1, there is
 &nbsp;&nbsp;&nbsp;&nbsp; -h | --help        Print help</blockquote>
 
 ## Build Parameters
-OpenCV is a very rich environment, with many different options available. Check the script to make sure that the options you need are included. By default, the major options selected:
+OpenCV is a very rich environment, with many different options available. Check the script to make sure that the options you need are included/excluded. By default, the buildOpenCV.sh script selects these major options:
 
 * CUDA on
 * GStreamer
