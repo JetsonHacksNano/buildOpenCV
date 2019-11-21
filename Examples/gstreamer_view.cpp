@@ -14,9 +14,9 @@ std::string get_tegra_pipeline(int width, int height, int fps) {
 
 int main() {
     // Options
-    int WIDTH = 1920;
-    int HEIGHT = 1080;
-    int FPS = 30;
+    int WIDTH = 1280;
+    int HEIGHT = 720;
+    int FPS = 60;
 
     // Define the gstream pipeline
     std::string pipeline = get_tegra_pipeline(WIDTH, HEIGHT, FPS);
