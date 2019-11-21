@@ -1,11 +1,11 @@
 There are two example programs here. Both programs require OpenCV to be installed with GStreamer support enabled.
-Both of these examples were last tested with L4T 28.2, OpenCV 3.4.1
+Both of these examples were last tested with L4T 32.2.1, OpenCV 4.1.1
 
 The first is a simple C++ program to view the onboard camera feed from the Jetson Dev Kit.
 
 To compile gstreamer_view.cpp:
-
-$ gcc -std=c++11 `pkg-config --cflags opencv` `pkg-config --libs opencv` gstreamer_view.cpp -o gstreamer_view -lstdc++ -lopencv_core -lopencv_highgui -lopencv_videoio
+<blockquote>
+$ gcc -std=c++11 `pkg-config --cflags opencv` `pkg-config --libs opencv` gstreamer_view.cpp -o gstreamer_view -lstdc++ -lopencv_core -lopencv_highgui -lopencv_videoio</blockquote>
 
 to run the program:
 
@@ -17,7 +17,7 @@ To run the Canny detection demo (Python 2.7):
 
 $ python cannyDetection.py
 
-With Python 3.3:
+With Python 3:
 
 $ python3 cannyDetection.py
 
@@ -29,18 +29,18 @@ With the Canny detection demo, use the less than (<) and greater than (>) to adj
    https://gist.github.com/peter-moran/742998d893cd013edf6d0c86cc86ff7f
    Note that the nvvidconv flip-method was changed to 0. Earlier versions of L4T used a flip method of 2.
 
-2. For the Python examples, you will need to have the appropriate librariers installed. From the buildOpenCV scripts:
+2. For the Python examples, you will need to have the appropriate libraries installed. From the buildOpenCV scripts:
 
 ####     Python 2.7
     $ sudo apt-get install -y python-dev python-numpy python-py python-pytest
-####     Python 3.5
+####     Python 3.6
     $ sudo apt-get install -y python3-dev python3-numpy python3-py python3-pytest
 
 
 ## License
 MIT License
 
-Copyright (c) 2017-2018 Jetsonhacks
+Copyright (c) 2017-2019 Jetsonhacks
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
