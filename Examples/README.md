@@ -1,7 +1,7 @@
 There are two example programs here. Both programs require OpenCV to be installed with GStreamer support enabled.
 Both of these examples were last tested with L4T 32.2.1, OpenCV 4.1.1
 
-The first is a simple C++ program to view the onboard camera feed from the Jetson Dev Kit.
+The first is a simple C++ program to view the onboard camera feed from the Jetson Dev Kit. The examples assume that a RPi V2 CSI camera is attached to the Nano. You may have to change the /dev/video* path for a USB camera.
 
 To compile gstreamer_view.cpp:
 <blockquote>
