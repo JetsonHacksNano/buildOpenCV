@@ -59,7 +59,7 @@ The advantage of packaging is that you can use the resulting package file to ins
 * OpenCV 4.1.1
 * Packaging Option ( Builds package by default; --no_package does not build package)
 
-<b>June 2020, Upgrade OpenCV 4.3.1 & Add cmake cuDNN, DNN_CUDA Support</b>
+<b>June 2020, Upgrade OpenCV 4.3.0 & Add cmake cuDNN, DNN_CUDA Support</b>
 
 * Jetson Nano
 * L4T 32.2.1/JetPack 4.2.2
