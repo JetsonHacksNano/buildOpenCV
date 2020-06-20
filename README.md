@@ -4,7 +4,7 @@ Script for building OpenCV 4 on the NVIDIA Jetson Nano Developer Kit
 Building for:
 * Jetson Nano
 * L4T 32.2.1/JetPack 4.2.2
-* OpenCV 4.1.1
+* OpenCV 4.3.0
 * Packaging Option ( Builds package by default; --no_package does not build package)
 
 <em><b>Note: </b>The script does not check to see which version of L4T is running before building, understand the script may only work with the stated versions.</em>
@@ -36,11 +36,13 @@ Note that if you are building for Python, you most definitely will benefit from 
 OpenCV is a very rich environment, with many different options available. Check the script to make sure that the options you need are included/excluded. By default, the buildOpenCV.sh script selects these major options:
 
 * CUDA on
+* OpenCV DNN for CUDA, 
 * GStreamer
 * V4L - (Video for Linux)
 * QT - (<em>No gtk support built in</em>)
 * Python 2 bindings
 * Python 3 bindings
+* Pkg config on
 
 ## Packaging
 By default, the build will create a OpenCV package. The package file will be found in:
@@ -55,4 +57,11 @@ The advantage of packaging is that you can use the resulting package file to ins
 * Jetson Nano
 * L4T 32.2.1/JetPack 4.2.2
 * OpenCV 4.1.1
+* Packaging Option ( Builds package by default; --no_package does not build package)
+
+<b>June 2020, Upgrade OpenCV 4.3.0 & Add cmake cuDNN, DNN_CUDA Support</b>
+
+* Jetson Nano
+* L4T 32.2.1/JetPack 4.2.2
+* OpenCV 4.3.0
 * Packaging Option ( Builds package by default; --no_package does not build package)
