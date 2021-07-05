@@ -19,7 +19,7 @@ WHEREAMI=$PWD
 # This will default to the number of CPU cores (on the Nano, that's 4)
 # If you are using a SD card, you may want to change this
 # to 1. Also, you may want to increase the size of your swap file
-NUM_JOBS=$(nproc)
+NUM_JOBS=1
 
 CLEANUP=true
 
